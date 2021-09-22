@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFCore.Demo.Data.Migrations
 {
-    [DbContext(typeof(DemoContext))]
-    [Migration("20210921114707_UpdateEntity")]
-    partial class UpdateEntity
+    [DbContext(typeof(DemoDBContext))]
+    [Migration("20210922103351_addMigration")]
+    partial class addMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,39 @@ namespace EFCore.Demo.Data.Migrations
                     b.HasIndex("LeagueId");
 
                     b.ToTable("Clubs");
+                });
+
+            modelBuilder.Entity("EFCore.Demo.Domain.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Round")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("StartTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Game");
+                });
+
+            modelBuilder.Entity("EFCore.Demo.Domain.GamePlayer", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlayerId", "GameId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("GamePlayer");
                 });
 
             modelBuilder.Entity("EFCore.Demo.Domain.League", b =>
@@ -88,11 +121,35 @@ namespace EFCore.Demo.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ResumeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClubId");
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("EFCore.Demo.Domain.Resume", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
+
+                    b.ToTable("Resume");
                 });
 
             modelBuilder.Entity("EFCore.Demo.Domain.Club", b =>
@@ -104,6 +161,25 @@ namespace EFCore.Demo.Data.Migrations
                     b.Navigation("League");
                 });
 
+            modelBuilder.Entity("EFCore.Demo.Domain.GamePlayer", b =>
+                {
+                    b.HasOne("EFCore.Demo.Domain.Game", "Game")
+                        .WithMany("GamePlayers")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EFCore.Demo.Domain.Player", "Player")
+                        .WithMany("GamePlayers")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Player");
+                });
+
             modelBuilder.Entity("EFCore.Demo.Domain.Player", b =>
                 {
                     b.HasOne("EFCore.Demo.Domain.Club", null)
@@ -111,9 +187,32 @@ namespace EFCore.Demo.Data.Migrations
                         .HasForeignKey("ClubId");
                 });
 
+            modelBuilder.Entity("EFCore.Demo.Domain.Resume", b =>
+                {
+                    b.HasOne("EFCore.Demo.Domain.Player", "Player")
+                        .WithOne("Resume")
+                        .HasForeignKey("EFCore.Demo.Domain.Resume", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+                });
+
             modelBuilder.Entity("EFCore.Demo.Domain.Club", b =>
                 {
                     b.Navigation("Players");
+                });
+
+            modelBuilder.Entity("EFCore.Demo.Domain.Game", b =>
+                {
+                    b.Navigation("GamePlayers");
+                });
+
+            modelBuilder.Entity("EFCore.Demo.Domain.Player", b =>
+                {
+                    b.Navigation("GamePlayers");
+
+                    b.Navigation("Resume");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,6 +11,7 @@ EFCore.Demo.Data
 
 - 1、引入Microsoft.EntityFrameworkCore.SqlServer
 - 2、引入Microsoft.EntityFrameworkCore.Tools
+- 3、Microsoft.Extensions.Logging.Console
 
 EFCore.Demo.App
 
@@ -18,12 +19,17 @@ EFCore.Demo.App
 
 EFCore.Demo.Domain
 
-System.ComponentModel.Annotations
+- System.ComponentModel.Annotations
+
 
 程序包管理控制台
 
-get-help entityframework
+- get-help entityframework
 
-Add-Migration
+- Add-Migration
 
-Update-Database -verbose
+- Update-Database -verbose
+- Remove-Migration
+
+
+

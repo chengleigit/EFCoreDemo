@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFCore.Demo.Data.Migrations
 {
-    [DbContext(typeof(DemoContext))]
-    [Migration("20210921120655_AddOneToOne")]
-    partial class AddOneToOne
+    [DbContext(typeof(DemoDBContext))]
+    [Migration("20210922113452_updateResumeName")]
+    partial class updateResumeName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,7 +65,7 @@ namespace EFCore.Demo.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("EFCore.Demo.Domain.GamePlayer", b =>
@@ -80,7 +80,7 @@ namespace EFCore.Demo.Data.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("GamePlayer");
+                    b.ToTable("GamePlayers");
                 });
 
             modelBuilder.Entity("EFCore.Demo.Domain.League", b =>
@@ -149,7 +149,7 @@ namespace EFCore.Demo.Data.Migrations
                     b.HasIndex("PlayerId")
                         .IsUnique();
 
-                    b.ToTable("Resume");
+                    b.ToTable("Resumes");
                 });
 
             modelBuilder.Entity("EFCore.Demo.Domain.Club", b =>
